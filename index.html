@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escala Ingeniería — Diseñando · Planificando · Construyendo · Transformando</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --orange: #F5821F;
+      --red: #C42127;
+      --green-dark: #006838;
+      --green-light: #3AAD47;
+      --charcoal: #1A1A1C;
+      --warm-white: #F7F5F2;
+      --mid: #E8E6E3;
+      --text-muted: #6B6860;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--warm-white); color: var(--charcoal); overflow-x: hidden; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 20px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.4s ease, padding 0.4s ease;
+    }
+    nav.scrolled {
+      background: rgba(26,26,28,0.97);
+      backdrop-filter: blur(12px);
+      padding: 14px 60px;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-logo img { height: 44px; width: auto; }
+    .nav-wordmark { display: flex; flex-direction: column; line-height: 1; }
+    .nav-wordmark .escala { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 22px; color: white; letter-spacing: 0.04em; }
+    .nav-wordmark .ingenieria { font-family: 'Barlow', sans-serif; font-weight: 400; font-size: 10px; color: rgba(255,255,255,0.6); letter-spacing: 0.18em; text-transform: uppercase; margin-top: 1px; }
+    .nav-links { display: flex; align-items: center; gap: 40px; list-style: none; }
+    .nav-links a { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--orange); }
+    .nav-cta { background: var(--orange); color: white !important; padding: 10px 24px; border-radius: 2px; font-weight: 600 !important; }
+    .nav-cta:hover { background: #e0721a !important; color: white !important; transform: translateY(-1px); }
+
+    /* HERO */
+    .hero {
+      position: relative; height: 100vh; min-height: 700px;
+      background: var(--charcoal);
+      overflow: hidden;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 60px 80px;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: 0; right: 0;
+      width: 42%; height: 100%;
+      background: #111112;
+      clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+    }
+    .hero-accent-line {
+      position: absolute; top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: linear-gradient(to bottom, var(--orange), var(--red));
+    }
+    .hero-logo-large {
+      position: absolute; top: 50%; right: 8%;
+      transform: translateY(-50%);
+      width: 220px; height: 220px;
+      opacity: 0.07; filter: grayscale(1) invert(1);
+    }
+    .hero-grid {
+      position: absolute; top: 80px; right: 60px;
+      width: 200px; height: 200px; opacity: 0.05;
+    }
+    .hero-grid line { stroke: white; stroke-width: 1; }
+    .hero-content { position: relative; z-index: 2; max-width: 900px; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 10px;
+      margin-bottom: 32px; padding: 6px 16px 6px 6px;
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 2px;
+    }
+    .hero-tag-dot {
+      width: 8px; height: 8px; background: var(--orange); border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(0.75); } }
+    .hero-tag span { font-family: 'Barlow', sans-serif; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.12em; text-transform: uppercase; }
+    .hero-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(72px, 10vw, 140px); line-height: 0.92; color: white; letter-spacing: -0.02em; text-transform: uppercase; }
+    .hero-title .accent { color: var(--orange); }
+    .hero-sub { margin-top: 32px; display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; }
+    .hero-tagline { font-family: 'Barlow', sans-serif; font-size: 15px; font-weight: 300; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; text-transform: uppercase; line-height: 2; }
+    .hero-tagline span { color: rgba(255,255,255,0.85); font-weight: 500; }
+    .hero-cta-group { display: flex; gap: 12px; flex-shrink: 0; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--orange); color: white;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
+      padding: 14px 28px; text-decoration: none; border-radius: 2px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: #e0721a; transform: translateY(-2px); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: transparent; color: white;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
+      padding: 14px 28px; text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 2px;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); transform: translateY(-2px); }
+    .scroll-indicator {
+      position: absolute; bottom: 40px; right: 60px;
+      display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 2;
+    }
+    .scroll-indicator span { font-family: 'Barlow', sans-serif; font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.3); letter-spacing: 0.16em; text-transform: uppercase; writing-mode: vertical-rl; }
+    .scroll-line { width: 1px; height: 60px; background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent); animation: scrollLine 2s ease-in-out infinite; }
+    @keyframes scrollLine { 0% { transform:scaleY(0); transform-origin:top; } 50% { transform:scaleY(1); transform-origin:top; } 51% { transform:scaleY(1); transform-origin:bottom; } 100% { transform:scaleY(0); transform-origin:bottom; } }
+
+    /* TAGLINE STRIP */
+    .tagline-strip { background: var(--orange); overflow: hidden; }
+    .tagline-marquee { display: flex; white-space: nowrap; animation: marquee 24s linear infinite; width: max-content; }
+    @keyframes marquee { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+    .tagline-item { display: inline-flex; align-items: center; gap: 20px; padding: 15px 36px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; color: white; }
+    .tagline-sep { width: 5px; height: 5px; background: rgba(255,255,255,0.4); border-radius: 50%; flex-shrink: 0; }
+
+    /* SECTIONS COMMON */
+    .section-label { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .section-label-line { width: 32px; height: 2px; background: var(--orange); }
+    .section-label span { font-family: 'Barlow', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--orange); }
+    .section-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: clamp(42px, 5vw, 72px); line-height: 0.95; color: var(--charcoal); text-transform: uppercase; letter-spacing: -0.01em; }
+    .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 80px; gap: 40px; }
+    .section-desc { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 400; color: var(--text-muted); line-height: 1.7; max-width: 380px; }
+
+    /* SERVICES */
+    .services { padding: 120px 60px; background: var(--warm-white); }
+    .services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+    .service-card {
+      position: relative; padding: 48px 36px; background: white; overflow: hidden;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .service-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+      transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+    }
+    .service-card:nth-child(1)::after { background: var(--orange); }
+    .service-card:nth-child(2)::after { background: var(--red); }
+    .service-card:nth-child(3)::after { background: var(--green-dark); }
+    .service-card:nth-child(4)::after { background: var(--green-light); }
+    .service-card:hover::after { transform: scaleX(1); }
+    .service-card:hover { transform: translateY(-6px); }
+    .service-num { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.12em; color: rgba(26,26,28,0.18); margin-bottom: 32px; }
+    .service-icon { width: 56px; height: 56px; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+    .service-card:nth-child(1) .service-icon { background: rgba(245,130,31,0.1); color: var(--orange); }
+    .service-card:nth-child(2) .service-icon { background: rgba(196,33,39,0.1); color: var(--red); }
+    .service-card:nth-child(3) .service-icon { background: rgba(0,104,56,0.1); color: var(--green-dark); }
+    .service-card:nth-child(4) .service-icon { background: rgba(58,173,71,0.1); color: var(--green-light); }
+    .service-icon svg { width: 28px; height: 28px; }
+    .service-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; text-transform: uppercase; letter-spacing: 0.02em; color: var(--charcoal); margin-bottom: 12px; line-height: 1; }
+    .service-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13.5px; color: var(--text-muted); line-height: 1.65; }
+
+    /* ABOUT */
+    .about { background: var(--charcoal); padding: 120px 60px; position: relative; overflow: hidden; }
+    .about::before { content: ''; position: absolute; top: -200px; right: -200px; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(245,130,31,0.07) 0%, transparent 70%); }
+    .about-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; position: relative; z-index: 1; }
+    .about-content .section-title { color: white; }
+    .about-content .section-desc { color: rgba(255,255,255,0.45); max-width: 440px; margin-top: 24px; }
+    .about-values { margin-top: 40px; }
+    .about-value { display: flex; align-items: flex-start; gap: 16px; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .value-bullet { width: 24px; height: 24px; border-radius: 2px; flex-shrink: 0; margin-top: 2px; }
+    .about-value:nth-child(1) .value-bullet { background: var(--orange); }
+    .about-value:nth-child(2) .value-bullet { background: var(--red); }
+    .about-value:nth-child(3) .value-bullet { background: var(--green-dark); }
+    .value-text strong { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 18px; text-transform: uppercase; letter-spacing: 0.04em; color: white; display: block; margin-bottom: 4px; }
+    .value-text p { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13.5px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+    .stat-card { background: rgba(255,255,255,0.04); padding: 48px 40px; border: 1px solid rgba(255,255,255,0.06); }
+    .stat-number { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 72px; line-height: 1; color: white; letter-spacing: -0.02em; }
+    .stat-number .accent { color: var(--orange); }
+    .stat-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 8px; line-height: 1.4; }
+
+    /* PROJECTS */
+    .projects { padding: 120px 60px; background: var(--warm-white); }
+    .projects-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; margin-top: 80px; }
+    .project-card { position: relative; overflow: hidden; border-radius: 3px; background: var(--mid); }
+    .project-card:nth-child(1) { grid-column: span 7; aspect-ratio: 16/10; }
+    .project-card:nth-child(2) { grid-column: span 5; }
+    .project-card:nth-child(3) { grid-column: span 4; aspect-ratio: 4/3; }
+    .project-card:nth-child(4) { grid-column: span 4; aspect-ratio: 4/3; }
+    .project-card:nth-child(5) { grid-column: span 4; aspect-ratio: 4/3; }
+    .project-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; display: block; }
+    .project-card:hover .project-img { transform: scale(1.04); }
+    .project-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,26,28,0.88) 0%, rgba(26,26,28,0.1) 55%, transparent 100%); }
+    .project-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 24px 26px; transform: translateY(6px); transition: transform 0.3s ease; }
+    .project-card:hover .project-info { transform: translateY(0); }
+    .project-tag { display: inline-block; font-family: 'Barlow', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); background: rgba(245,130,31,0.15); padding: 4px 10px; border-radius: 2px; margin-bottom: 8px; }
+    .project-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 20px; color: white; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.1; }
+    .project-loc { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11.5px; color: rgba(255,255,255,0.45); margin-top: 4px; }
+
+    /* PROCESS */
+    .process { background: var(--charcoal); padding: 120px 60px; }
+    .process .section-title { color: white; }
+    .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 80px; position: relative; }
+    .process-steps::before { content: ''; position: absolute; top: 40px; left: calc(12.5% + 12px); right: calc(12.5% + 12px); height: 1px; background: rgba(255,255,255,0.07); }
+    .process-step { padding: 0 32px; position: relative; z-index: 1; }
+    .step-num-wrap { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 32px; background: var(--charcoal); }
+    .process-step:nth-child(1) .step-num-wrap { border: 1.5px solid var(--orange); }
+    .process-step:nth-child(2) .step-num-wrap { border: 1.5px solid var(--red); }
+    .process-step:nth-child(3) .step-num-wrap { border: 1.5px solid var(--green-dark); }
+    .process-step:nth-child(4) .step-num-wrap { border: 1.5px solid var(--green-light); }
+    .step-num { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 28px; }
+    .process-step:nth-child(1) .step-num { color: var(--orange); }
+    .process-step:nth-child(2) .step-num { color: var(--red); }
+    .process-step:nth-child(3) .step-num { color: var(--green-dark); }
+    .process-step:nth-child(4) .step-num { color: var(--green-light); }
+    .step-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; letter-spacing: 0.04em; color: white; margin-bottom: 12px; }
+    .step-desc { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13.5px; color: rgba(255,255,255,0.38); line-height: 1.65; }
+
+    /* CTA */
+    .cta { background: var(--warm-white); padding: 140px 60px; }
+    .cta-inner {
+      background: var(--charcoal); border-radius: 6px; padding: 80px;
+      display: grid; grid-template-columns: 1fr auto; gap: 60px; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-inner::before { content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: linear-gradient(to bottom, var(--orange), var(--red)); }
+    .cta-inner::after { content: ''; position: absolute; bottom: -120px; right: -120px; width: 450px; height: 450px; border-radius: 50%; background: radial-gradient(circle, rgba(245,130,31,0.05) 0%, transparent 70%); pointer-events: none; }
+    .cta-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(40px, 5vw, 64px); text-transform: uppercase; color: white; line-height: 0.95; letter-spacing: -0.01em; }
+    .cta-title .accent { color: var(--orange); }
+    .cta-sub { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; color: rgba(255,255,255,0.4); line-height: 1.65; margin-top: 18px; max-width: 480px; }
+    .cta-actions { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; position: relative; z-index: 1; }
+    .cta-contact-item {
+      display: flex; align-items: center; gap: 14px; padding: 16px 22px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px;
+      text-decoration: none; min-width: 270px; transition: background 0.2s, border-color 0.2s;
+    }
+    .cta-contact-item:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.16); }
+    .contact-icon { width: 36px; height: 36px; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .contact-icon.orange { background: rgba(245,130,31,0.15); color: var(--orange); }
+    .contact-icon.red { background: rgba(196,33,39,0.15); color: var(--red); }
+    .contact-icon.green { background: rgba(0,104,56,0.15); color: var(--green-light); }
+    .contact-icon svg { width: 18px; height: 18px; }
+    .contact-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); display: block; margin-bottom: 2px; }
+    .contact-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 500; color: white; }
+
+    /* FOOTER */
+    footer { background: #111112; padding: 60px 60px 40px; }
+    .footer-top { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 60px; }
+    .footer-logo-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .footer-logo-wrap img { height: 40px; }
+    .footer-escala { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 20px; color: white; letter-spacing: 0.04em; }
+    .footer-ing { font-family: 'Barlow', sans-serif; font-size: 9px; font-weight: 400; color: rgba(255,255,255,0.35); letter-spacing: 0.18em; text-transform: uppercase; display: block; margin-top: 1px; }
+    .footer-sub { font-family: 'Barlow', sans-serif; font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: 0.06em; }
+    .footer-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .footer-col h4 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
+    .footer-col ul li a:hover { color: rgba(255,255,255,0.75); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; }
+    .footer-copy { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; color: rgba(255,255,255,0.18); }
+    .footer-dots { display: flex; gap: 6px; }
+    .color-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    /* REVEAL ANIMATIONS */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .animate-up { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) both; }
+    .delay-1 { animation-delay: 0.12s; }
+    .delay-2 { animation-delay: 0.24s; }
+    .delay-3 { animation-delay: 0.36s; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(32px); } to { opacity:1; transform:translateY(0); } }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      nav, nav.scrolled { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 0 24px 60px; }
+      .services, .projects, .cta { padding: 80px 24px; }
+      .about, .process { padding: 80px 24px; }
+      .services-grid { grid-template-columns: 1fr 1fr; }
+      .about-inner { grid-template-columns: 1fr; gap: 60px; }
+      .projects-grid { grid-template-columns: 1fr 1fr; }
+      .project-card:nth-child(1) { grid-column: span 2; }
+      .project-card:nth-child(2) { grid-column: span 2; }
+      .project-card:nth-child(3), .project-card:nth-child(4), .project-card:nth-child(5) { grid-column: span 1; }
+      .process-steps { grid-template-columns: 1fr 1fr; }
+      .cta-inner { grid-template-columns: 1fr; padding: 48px 36px; }
+      footer { padding: 48px 24px 32px; }
+      .footer-top { flex-direction: column; }
+      .footer-links { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <img src="brand_assets/LogoEscalaLimpio.png" alt="Escala Ingeniería">
+    <div class="nav-wordmark">
+      <span class="escala">Escala</span>
+      <span class="ingenieria">Ingeniería</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#proyectos">Proyectos</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+    <li><a href="#contacto" class="nav-cta">Contáctanos</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-accent-line"></div>
+  <img src="brand_assets/LogoEscalaLimpio.png" alt="" class="hero-logo-large" aria-hidden="true">
+  <svg class="hero-grid" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" y1="0" x2="200" y2="0"/><line x1="0" y1="40" x2="200" y2="40"/>
+    <line x1="0" y1="80" x2="200" y2="80"/><line x1="0" y1="120" x2="200" y2="120"/>
+    <line x1="0" y1="160" x2="200" y2="160"/><line x1="0" y1="200" x2="200" y2="200"/>
+    <line x1="0" y1="0" x2="0" y2="200"/><line x1="40" y1="0" x2="40" y2="200"/>
+    <line x1="80" y1="0" x2="80" y2="200"/><line x1="120" y1="0" x2="120" y2="200"/>
+    <line x1="160" y1="0" x2="160" y2="200"/><line x1="200" y1="0" x2="200" y2="200"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-tag animate-up">
+      <div class="hero-tag-dot"></div>
+      <span>Ingeniería de alto impacto</span>
+    </div>
+    <h1 class="hero-title animate-up delay-1">
+      Construimos<br>el <span class="accent">Futuro</span><br>de México
+    </h1>
+    <div class="hero-sub animate-up delay-2">
+      <p class="hero-tagline">
+        <span>Diseñando</span> · <span>Planificando</span> · <span>Construyendo</span> · <span>Transformando</span>
+      </p>
+      <div class="hero-cta-group">
+        <a href="#proyectos" class="btn-primary">
+          Ver proyectos
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#contacto" class="btn-outline">Contáctanos</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE STRIP -->
+<div class="tagline-strip">
+  <div class="tagline-marquee">
+    <div class="tagline-item">Diseñando<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Planificando<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Construyendo<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Transformando<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Diseñando<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Planificando<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Construyendo<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Transformando<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Diseñando<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Planificando<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Construyendo<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Transformando<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Diseñando<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Planificando<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Construyendo<span class="tagline-sep"></span></div>
+    <div class="tagline-item">Transformando<span class="tagline-sep"></span></div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="servicios">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label"><div class="section-label-line"></div><span>Lo que hacemos</span></div>
+      <h2 class="section-title">Nuestros<br>Servicios</h2>
+    </div>
+    <p class="section-desc">Ofrecemos soluciones integrales de ingeniería con un enfoque en calidad, eficiencia y sostenibilidad en cada proyecto que emprendemos.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-num">01</div>
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <div class="service-name">Diseño</div>
+      <p class="service-text">Creamos diseños arquitectónicos e ingenieriles con precisión técnica y visión estética, adaptados a cada necesidad y contexto.</p>
+    </div>
+    <div class="service-card reveal" style="transition-delay:0.1s">
+      <div class="service-num">02</div>
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <div class="service-name">Planificación</div>
+      <p class="service-text">Desarrollamos planes estratégicos de construcción que optimizan tiempos, recursos y presupuesto sin comprometer la calidad.</p>
+    </div>
+    <div class="service-card reveal" style="transition-delay:0.2s">
+      <div class="service-num">03</div>
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div class="service-name">Supervisión</div>
+      <p class="service-text">Supervisamos cada etapa del proceso constructivo garantizando el cumplimiento de estándares y especificaciones técnicas.</p>
+    </div>
+    <div class="service-card reveal" style="transition-delay:0.3s">
+      <div class="service-num">04</div>
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
+        </svg>
+      </div>
+      <div class="service-name">Construcción</div>
+      <p class="service-text">Ejecutamos proyectos con los más altos estándares de calidad, seguridad y responsabilidad ambiental en cada obra.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT / STATS -->
+<section class="about" id="nosotros">
+  <div class="about-inner">
+    <div class="about-content reveal">
+      <div class="section-label"><div class="section-label-line"></div><span>Quiénes somos</span></div>
+      <h2 class="section-title">Expertos en<br>Ingeniería</h2>
+      <p class="section-desc">Escala Ingeniería es una empresa constructora comprometida con la transformación del entorno construido a través de la innovación, la calidad y la sostenibilidad.</p>
+      <div class="about-values">
+        <div class="about-value">
+          <div class="value-bullet"></div>
+          <div class="value-text">
+            <strong>Calidad sin Compromiso</strong>
+            <p>Cada proyecto cumple con los más estrictos estándares de la industria, garantizando durabilidad y excelencia en cada detalle.</p>
+          </div>
+        </div>
+        <div class="about-value">
+          <div class="value-bullet"></div>
+          <div class="value-text">
+            <strong>Innovación Constante</strong>
+            <p>Incorporamos las últimas tecnologías y metodologías constructivas para optimizar cada proceso y resultado.</p>
+          </div>
+        </div>
+        <div class="about-value">
+          <div class="value-bullet"></div>
+          <div class="value-text">
+            <strong>Responsabilidad Ambiental</strong>
+            <p>Construimos con conciencia ecológica, minimizando el impacto ambiental y promoviendo la sostenibilidad.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="stats-grid reveal" style="transition-delay:0.15s">
+      <div class="stat-card">
+        <div class="stat-number">15<span class="accent">+</span></div>
+        <div class="stat-label">Años de<br>experiencia</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">200<span class="accent">+</span></div>
+        <div class="stat-label">Proyectos<br>completados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">98<span class="accent">%</span></div>
+        <div class="stat-label">Clientes<br>satisfechos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">50<span class="accent">+</span></div>
+        <div class="stat-label">Profesionales<br>especializados</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects" id="proyectos">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label"><div class="section-label-line"></div><span>Portafolio</span></div>
+      <h2 class="section-title">Proyectos<br>Destacados</h2>
+    </div>
+    <p class="section-desc">Una selección de nuestros proyectos más representativos, reflejo del compromiso con la excelencia constructiva.</p>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card reveal">
+      <img src="https://placehold.co/900x560/2a2a2a/555555?text=+" alt="Proyecto Residencial" class="project-img">
+      <div class="project-overlay"></div>
+      <div class="project-info">
+        <div class="project-tag">Residencial</div>
+        <div class="project-name">Conjunto Habitacional<br>Bosques del Sur</div>
+        <div class="project-loc">Ciudad de México · 2024</div>
+      </div>
+    </div>
+    <div class="project-card reveal" style="transition-delay:0.1s">
+      <img src="https://placehold.co/600x560/1e2a1e/445544?text=+" alt="Edificio Comercial" class="project-img">
+      <div class="project-overlay"></div>
+      <div class="project-info">
+        <div class="project-tag">Comercial</div>
+        <div class="project-name">Torre Corporativa<br>Santa Fe</div>
+        <div class="project-loc">Ciudad de México · 2023</div>
+      </div>
+    </div>
+    <div class="project-card reveal" style="transition-delay:0.2s">
+      <img src="https://placehold.co/500x375/2a1e1e/554444?text=+" alt="Infraestructura" class="project-img">
+      <div class="project-overlay"></div>
+      <div class="project-info">
+        <div class="project-tag">Infraestructura</div>
+        <div class="project-name">Puente<br>Vehicular Norte</div>
+        <div class="project-loc">Estado de México · 2023</div>
+      </div>
+    </div>
+    <div class="project-card reveal" style="transition-delay:0.3s">
+      <img src="https://placehold.co/500x375/1a1e28/333355?text=+" alt="Industrial" class="project-img">
+      <div class="project-overlay"></div>
+      <div class="project-info">
+        <div class="project-tag">Industrial</div>
+        <div class="project-name">Nave Industrial<br>Vallejo</div>
+        <div class="project-loc">Azcapotzalco · 2022</div>
+      </div>
+    </div>
+    <div class="project-card reveal" style="transition-delay:0.4s">
+      <img src="https://placehold.co/500x375/1a2820/334433?text=+" alt="Institucional" class="project-img">
+      <div class="project-overlay"></div>
+      <div class="project-info">
+        <div class="project-tag">Institucional</div>
+        <div class="project-name">Centro Comunitario<br>Xochimilco</div>
+        <div class="project-loc">Ciudad de México · 2022</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="proceso">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label"><div class="section-label-line"></div><span>Metodología</span></div>
+      <h2 class="section-title">Nuestro<br>Proceso</h2>
+    </div>
+    <p class="section-desc" style="color:rgba(255,255,255,0.38)">Un método probado que garantiza la entrega a tiempo y dentro del presupuesto, sin sacrificar calidad ni rigor técnico.</p>
+  </div>
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <div class="step-num-wrap"><span class="step-num">01</span></div>
+      <div class="step-name">Diagnóstico</div>
+      <p class="step-desc">Analizamos el sitio, requisitos y contexto para entender a fondo los alcances y necesidades del proyecto.</p>
+    </div>
+    <div class="process-step reveal" style="transition-delay:0.1s">
+      <div class="step-num-wrap"><span class="step-num">02</span></div>
+      <div class="step-name">Diseño y Plan</div>
+      <p class="step-desc">Desarrollamos el proyecto ejecutivo y el plan de trabajo con cronogramas y presupuestos detallados.</p>
+    </div>
+    <div class="process-step reveal" style="transition-delay:0.2s">
+      <div class="step-num-wrap"><span class="step-num">03</span></div>
+      <div class="step-name">Ejecución</div>
+      <p class="step-desc">Construimos con los más altos estándares, coordinando equipos y recursos para cumplir objetivos.</p>
+    </div>
+    <div class="process-step reveal" style="transition-delay:0.3s">
+      <div class="step-num-wrap"><span class="step-num">04</span></div>
+      <div class="step-name">Entrega</div>
+      <p class="step-desc">Entregamos con revisión final, documentación completa y seguimiento post-obra garantizado.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / CONTACT -->
+<section class="cta" id="contacto">
+  <div class="cta-inner reveal">
+    <div style="position:relative;z-index:1">
+      <div class="section-label" style="margin-bottom:20px"><div class="section-label-line"></div><span>Hablemos</span></div>
+      <h2 class="cta-title">¿Tienes un<br><span class="accent">Proyecto</span><br>en Mente?</h2>
+      <p class="cta-sub">Contáctanos hoy y descubre cómo Escala Ingeniería puede convertir tu visión en realidad con la precisión y calidad que mereces.</p>
+    </div>
+    <div class="cta-actions">
+      <a href="tel:+525512345678" class="cta-contact-item">
+        <div class="contact-icon orange">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.68 9.31a19.79 19.79 0 01-3.07-8.67A2 2 0 013.61 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.91 8.91a16 16 0 006.29 6.29l.91-.91a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+        </div>
+        <div><span class="contact-label">Teléfono</span><span class="contact-value">+52 55 1234 5678</span></div>
+      </a>
+      <a href="mailto:contacto@escalaingenieria.com" class="cta-contact-item">
+        <div class="contact-icon red">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div><span class="contact-label">Correo</span><span class="contact-value">contacto@escalaingenieria.com</span></div>
+      </a>
+      <a href="#" class="cta-contact-item">
+        <div class="contact-icon green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div><span class="contact-label">Ubicación</span><span class="contact-value">Ciudad de México, México</span></div>
+      </a>
+      <a href="#contacto" class="btn-primary" style="justify-content:center;margin-top:6px">
+        Solicitar cotización
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo-wrap">
+        <img src="brand_assets/LogoEscalaLimpio.png" alt="Escala Ingeniería">
+        <div>
+          <span class="footer-escala">Escala</span>
+          <span class="footer-ing">Ingeniería</span>
+        </div>
+      </div>
+      <p class="footer-sub">Diseñando · Planificando · Construyendo · Transformando</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Servicios</h4>
+        <ul>
+          <li><a href="#">Diseño</a></li>
+          <li><a href="#">Planificación</a></li>
+          <li><a href="#">Supervisión</a></li>
+          <li><a href="#">Construcción</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="#">Nosotros</a></li>
+          <li><a href="#">Proyectos</a></li>
+          <li><a href="#">Proceso</a></li>
+          <li><a href="#">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="#">+52 55 1234 5678</a></li>
+          <li><a href="#">contacto@escalaingenieria.com</a></li>
+          <li><a href="#">Ciudad de México</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 Escala Ingeniería. Todos los derechos reservados.</p>
+    <div class="footer-dots">
+      <div class="color-dot" style="background:var(--orange)"></div>
+      <div class="color-dot" style="background:var(--red)"></div>
+      <div class="color-dot" style="background:var(--green-dark)"></div>
+      <div class="color-dot" style="background:var(--green-light)"></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+  if (window.scrollY > 60) navbar.classList.add('scrolled');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
